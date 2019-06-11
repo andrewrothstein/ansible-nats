@@ -1,0 +1,58 @@
+---
+- name: resolve platform specific vars
+  include_vars: '{{ item }}'
+  with_first_found:
+    - files:
+        - '{{ ansible_distribution }}-{{ ansible_distribution_release }}.yml'
+        - '{{ ansible_distribution }}.yml'
+        - '{{ ansible_os_family }}.yml'
+      skip: true
+      paths:
+        - '{{ role_path }}/vars'
+- name: look for nats install
+  become: yes
+  stat:
+    path: '{{ nats_install_dir }}'
+  changed_when: False
+  register: nats_binary
+- when: not nats_binary.stat.exists
+  block:
+    - name: download archive
+      become: yes
+      become_user: root
+      get_url:
+        url: '{{ nats_url }}'
+        dest: /tmp/{{ nats_zip }}
+        mode: 0644
+    - name: unarchive
+      become: yes
+      become_user: root
+      unarchive:
+        remote_src: yes
+        src: /tmp/{{ nats_zip }}
+        dest: '{{ nats_parent_install_dir }}'
+        creates: '{{ nats_install_dir }}'
+  always:
+    - name: delete archive
+      become: yes
+      become_user: root
+      file:
+        path: /tmp/{{ nats_zip }}
+        state: absent
+- name: link
+  become: yes
+  become_user: root
+  file:
+    src: '{{ nats_install_dir }}'
+    dest: '{{ nats_link_dir }}'
+    state: link
+- name: include in shell...
+  become: yes
+  become_user: root
+  with_items:
+    - f: nats.sh
+      d: /etc/profile.d
+  template:
+    src: '{{ item.f }}.j2'
+    dest: '{{ item.d }}/{{ item.f }}'
+    mode: '{{ item.m | default("0644") }}'
