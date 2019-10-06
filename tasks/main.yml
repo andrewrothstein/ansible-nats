@@ -50,9 +50,10 @@
   become: yes
   become_user: root
   with_items:
-    - f: nats.sh
+    - t: nats.sh.j2
+      f: '{{ nats_app }}.sh'
       d: /etc/profile.d
   template:
-    src: '{{ item.f }}.j2'
+    src: '{{ item.t }}'
     dest: '{{ item.d }}/{{ item.f }}'
     mode: '{{ item.m | default("0644") }}'
