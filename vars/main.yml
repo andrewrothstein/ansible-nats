@@ -2,10 +2,10 @@
 # vars file for nats
 nats_platform: '{{ nats_os }}-{{ nats_arch }}'
 
-nats_name: nats-server-{{ nats_ver }}-{{ nats_platform }}
+nats_name: '{{ nats_app }}-{{ nats_ver }}-{{ nats_platform }}'
 nats_zip: '{{ nats_name }}.zip'
-nats_url: '{{ nats_mirror }}/{{ nats_ver }}/{{ nats_zip }}'
+nats_url: '{{ nats_mirror }}/{{ nats_app }}/releases/download/{{ nats_ver }}/{{ nats_zip }}'
 nats_checksum: '{{ nats_checksums[nats_ver][nats_platform] }}'
 
 nats_install_dir: '{{ nats_parent_install_dir }}/{{ nats_name }}'
-nats_link_dir: '{{ nats_parent_install_dir }}/nats-server'
+nats_link_dir: '{{ nats_parent_install_dir }}/{{ nats_app }}'

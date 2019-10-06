@@ -1,11 +1,12 @@
 ---
 # defaults file for nats
-nats_mirror: https://github.com/nats-io/nats-server/releases/download
-nats_ver: v2.1.0
+nats_mirror: https://github.com/nats-io
 nats_os: linux
 nats_arch: amd64
 
 nats_parent_install_dir: /usr/local
+nats_app: nats-server
+nats_ver: v2.1.0
 
 nats_checksums:
   v2.0.0:
