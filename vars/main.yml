@@ -1,5 +1,7 @@
 ---
 # vars file for nats
+nats_platform: '{{ nats_os }}-{{ nats_arch }}'
+
 nats_name: nats-server-{{ nats_ver }}-{{ nats_platform }}
 nats_zip: '{{ nats_name }}.zip'
 nats_url: '{{ nats_mirror }}/{{ nats_ver }}/{{ nats_zip }}'
