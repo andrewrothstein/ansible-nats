@@ -4,7 +4,7 @@ dependencies:
 galaxy_info:
   author: Andrew Rothstein
   company: BlackRock Financial Management
-  description: installs nats-server
+  description: base role for installing nats-server and nats-streaming-server
   galaxy_tags:
   - development
   license:
