@@ -4,6 +4,7 @@ nats_platform: '{{ nats_os }}-{{ nats_arch }}'
 
 nats_name: '{{ nats_app }}-{{ nats_ver }}-{{ nats_platform }}'
 nats_zip: '{{ nats_name }}.zip'
+nats_tmp_zip: /tmp/{{ nats_zip }}
 nats_url: '{{ nats_mirror }}/{{ nats_app }}/releases/download/{{ nats_ver }}/{{ nats_zip }}'
 nats_checksum: '{{ nats_checksums[nats_ver][nats_platform] }}'
 

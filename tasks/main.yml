@@ -9,7 +9,7 @@
       skip: true
       paths:
         - '{{ role_path }}/vars'
-- name: look for nats install
+- name: look for nats app install in {{ nats_install_dir }}
   become: yes
   stat:
     path: '{{ nats_install_dir }}'
@@ -17,29 +17,29 @@
   register: nats_binary
 - when: not nats_binary.stat.exists
   block:
-    - name: download archive
+    - name: download {{ nats_url }}
       become: yes
       become_user: root
       get_url:
         url: '{{ nats_url }}'
-        dest: /tmp/{{ nats_zip }}
+        dest: '{{ nats_tmp_zip }}'
         mode: 0644
-    - name: unarchive
+    - name: unarchiving {{ nats_tmp_zip }}
       become: yes
       become_user: root
       unarchive:
         remote_src: yes
-        src: /tmp/{{ nats_zip }}
+        src: '{{ nats_tmp_zip }}'
         dest: '{{ nats_parent_install_dir }}'
         creates: '{{ nats_install_dir }}'
   always:
-    - name: delete archive
+    - name: rm {{ nats_tmp_zip }}
       become: yes
       become_user: root
       file:
-        path: /tmp/{{ nats_zip }}
+        path: '{{ nats_tmp_zip }}'
         state: absent
-- name: link
+- name: linking {{ nats_link_dir }} to {{ nats_install_dir }}
   become: yes
   become_user: root
   file:
