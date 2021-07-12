@@ -1,6 +1,6 @@
 andrewrothstein.nats
 =========
-[![Build Status](https://travis-ci.org/andrewrothstein/ansible-nats.svg?branch=master)](https://travis-ci.org/andrewrothstein/ansible-nats)
+![Build Status](https://github.com/andrewrothstein/ansible-nats/actions/workflows/build.yml/badge.svg)
 
 A base role for install the nats_server and the nats_streaming_server
 
