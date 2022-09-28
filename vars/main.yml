@@ -1,5 +1,7 @@
 ---
 # vars file for nats
+nats_os: '{{ ansible_system | lower }}'
+nats_arch: '{{ nats_arch_map[ansible_architecture] }}'
 nats_platform: '{{ nats_os }}-{{ nats_arch }}'
 
 nats_name: '{{ nats_app }}-{{ nats_ver }}-{{ nats_platform }}'
