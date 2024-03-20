@@ -1,8 +1,9 @@
 ---
-- include_role:
+- name: Installing andrewrothstein.unarchivedeps
+  ansible.builtin.include_role:
     name: andrewrothstein.unarchivedeps
-- name: resolve platform specific vars
-  include_vars: '{{ item }}'
+- name: Resolve platform specific vars
+  ansible.builtin.include_vars: '{{ item }}'
   with_first_found:
     - files:
         - '{{ ansible_distribution }}-{{ ansible_distribution_release }}.yml'
@@ -11,51 +12,52 @@
       skip: true
       paths:
         - '{{ role_path }}/vars'
-- name: look for nats app install in {{ nats_install_dir }}
+- name: Look for nats app install in {{ nats_install_dir }}
   become: true
-  stat:
+  ansible.builtin.stat:
     path: '{{ nats_install_dir }}'
   changed_when: false
   register: nats_binary
-- when: not nats_binary.stat.exists
+- name: Downloading and installing nats app
+  when: not nats_binary.stat.exists
   block:
-    - name: download {{ nats_url }}
+    - name: Downloading {{ nats_url }}
       become: true
       become_user: root
-      get_url:
+      ansible.builtin.get_url:
         url: '{{ nats_url }}'
         dest: '{{ nats_tmp_zip }}'
-        mode: 0644
-    - name: unarchiving {{ nats_tmp_zip }}
+        mode: '644'
+    - name: Unarchiving {{ nats_tmp_zip }}
       become: true
       become_user: root
-      unarchive:
+      ansible.builtin.unarchive:
         remote_src: true
         src: '{{ nats_tmp_zip }}'
         dest: '{{ nats_parent_install_dir }}'
         creates: '{{ nats_install_dir }}'
   always:
-    - name: rm {{ nats_tmp_zip }}
+    - name: Rm {{ nats_tmp_zip }}
       become: true
       become_user: root
-      file:
+      ansible.builtin.file:
         path: '{{ nats_tmp_zip }}'
         state: absent
-- name: linking {{ nats_link_dir }} to {{ nats_install_dir }}
+- name: Linking {{ nats_link_dir }} to {{ nats_install_dir }}
   become: true
   become_user: root
-  file:
+  ansible.builtin.file:
     src: '{{ nats_install_dir }}'
     dest: '{{ nats_link_dir }}'
     state: link
-- name: include in shell...
+- name: Include in shell...
   become: true
   become_user: root
   with_items:
     - t: nats.sh.j2
       f: '{{ nats_app }}.sh'
       d: /etc/profile.d
-  template:
+  ansible.builtin.template:
     src: '{{ item.t }}'
     dest: '{{ item.d }}/{{ item.f }}'
-    mode: '{{ item.m | default("0644") }}'
+    mode: '{{ item.m | default("644") }}'

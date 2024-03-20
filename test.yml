@@ -1,7 +1,7 @@
 ---
-- hosts: all
-  roles:
-  - role: '{{ playbook_dir }}'
+- name: Testing andrewrothstein.nats
+  hosts: all
+  vars:
     nats_app: nats-server
     nats_ver: v2.1.0
     nats_checksums:
@@ -22,9 +22,13 @@
         windows-386: sha256:f234a569471540f03cb631315d3f4da6f978e4c217746c5e6518c3a6d564b17d
         # https://github.com/nats-io/nats-server/releases/download/v2.1.0/nats-server-v2.1.0-windows-amd64.zip
         windows-amd64: sha256:186ab39af0c99a9d98c36eb5022fd4d6cd188b96bed8ece0fd88756e56f334c9
+  roles:
+    - role: '{{ playbook_dir }}'
   tasks:
-  - command: /usr/local/nats-server/nats-server --version
-    register: nats_test_output
-  - name: nats-server --version
-    debug:
-      msg: '{{ nats_test_output.stdout }}'
+    - name: Executing 'nats-server --version'
+      ansible.builtin.command: /usr/local/nats-server/nats-server --version
+      changed_when: false
+      register: nats_test_output
+    - name: Output of 'nats-server --version'
+      ansible.builtin.debug:
+        msg: '{{ nats_test_output.stdout }}'
